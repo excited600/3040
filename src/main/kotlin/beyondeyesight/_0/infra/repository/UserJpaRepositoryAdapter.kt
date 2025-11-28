@@ -1,4 +1,4 @@
-package beyondeyesight._0.infra
+package beyondeyesight._0.infra.repository
 
 import beyondeyesight._0.domain.model.UserEntity
 import beyondeyesight._0.domain.repository.UserRepository
