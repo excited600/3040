@@ -68,6 +68,7 @@ class GatheringApplicationService(
         return mapper.invoke(gatheringEntity)
     }
 
+    @Transactional
     fun close(uuid: UUID) {
         gatheringService.close(uuid)
     }

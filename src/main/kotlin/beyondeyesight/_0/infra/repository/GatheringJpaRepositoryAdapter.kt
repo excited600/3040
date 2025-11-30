@@ -13,11 +13,19 @@ class GatheringJpaRepositoryAdapterI(
         return gatheringJpaRepository.save(gatheringEntity)
     }
 
+    override fun findByUuid(uuid: UUID): GatheringEntity? {
+        return gatheringJpaRepository.findById(uuid).orElse(null)
+    }
+
     override fun delete(gatheringEntity: GatheringEntity) {
         gatheringJpaRepository.delete(gatheringEntity)
     }
 
     override fun delete(uuid: UUID) {
         gatheringJpaRepository.deleteById(uuid)
+    }
+
+    override fun save(gatheringEntity: GatheringEntity): GatheringEntity {
+        return gatheringJpaRepository.save(gatheringEntity)
     }
 }

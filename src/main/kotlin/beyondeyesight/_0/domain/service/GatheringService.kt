@@ -66,7 +66,9 @@ class GatheringService(
     }
 
     fun close(uuid: UUID) {
-        // todo: 상태를 close로 바꾸는걸로.
-        gatheringRepository.delete(uuid)
+        val gathering = gatheringRepository.findByUuid(uuid)
+            ?: throw IllegalArgumentException("Gathering not found with uuid: $uuid")
+        gathering.close()
+        gatheringRepository.save(gathering)
     }
 }

@@ -63,6 +63,10 @@ class GatheringEntity(
     val startDateTime: LocalDateTime,
 ): BaseEntity(uuid = uuid) {
 
+    fun close() {
+        this.status = Status.CLOSED
+    }
+
     companion object {
         fun open(
             applyType: ApplyType,
