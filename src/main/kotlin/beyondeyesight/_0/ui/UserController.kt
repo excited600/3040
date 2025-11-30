@@ -30,28 +30,28 @@ class UserController(
     }
 
     class SignUpRequest(
-        var email: String,
-        var nickname: String,
-        var age: Int,
-        var gender: UserEntity.Gender,
-        var introduction: String,
-        var password: String,
-        var phoneNumber: String,
-        var phoneAuthenticated: Boolean,
+        val email: String,
+        val nickname: String,
+        val age: Int,
+        val gender: UserEntity.Gender,
+        val introduction: String,
+        val password: String,
+        val phoneNumber: String,
+        val phoneAuthenticated: Boolean,
     )
 
     class SignUpResponse(
-        var uuid: UUID,
-        var email: String,
-        var nickname: String,
-        var age: Int,
-        var gender: UserEntity.Gender,
-        var introduction: String,
-        var phoneNumber: String,
-        var phoneAuthenticated: Boolean,
-        var hearts: Int,
-        var isPrivate: Boolean,
-        var provider: UserEntity.Provider
+        val uuid: UUID,
+        val email: String,
+        val nickname: String,
+        val age: Int,
+        val gender: UserEntity.Gender,
+        val introduction: String,
+        val phoneNumber: String,
+        val phoneAuthenticated: Boolean,
+        val hearts: Int,
+        val isPrivate: Boolean,
+        val provider: UserEntity.Provider
     ) {
         companion object {
             fun from(userEntity: UserEntity): SignUpResponse {
