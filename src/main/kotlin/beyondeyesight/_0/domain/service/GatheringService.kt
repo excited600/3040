@@ -9,9 +9,11 @@ import java.util.UUID
 @Service
 class GatheringService(
     private val gatheringRepository: GatheringRepository,
+    private val participantService: ParticipantService,
 ) {
 
     fun open(
+        hostUuid: UUID,
         applyType: GatheringEntity.ApplyType,
         minCapacity: Int,
         maxCapacity: Int,
@@ -62,7 +64,15 @@ class GatheringService(
             startDateTime,
         )
 
-        return gatheringRepository.create(entity)
+        val gathering = gatheringRepository.create(entity)
+
+        participantService.join(
+            gatheringUuid = gathering.uuid,
+            userUuid = hostUuid,
+            isHost = true
+        )
+
+        return gathering
     }
 
     fun close(uuid: UUID) {

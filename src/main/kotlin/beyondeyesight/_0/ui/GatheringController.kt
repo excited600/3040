@@ -27,6 +27,7 @@ class GatheringController(
     @PostMapping("/")
     fun open(@RequestBody request: OpenGatheringRequest): ResponseEntity<OpenGatheringResponse> {
         return gatheringApplicationService.open(
+            hostUuid = request.hostUuid,
             applyType = request.applyType,
             minCapacity = request.minCapacity,
             maxCapacity = request.maxCapacity,
@@ -56,6 +57,7 @@ class GatheringController(
     }
 
     class OpenGatheringRequest(
+        val hostUuid: UUID,
         val applyType: GatheringEntity.ApplyType,
         val minCapacity: Int,
         val maxCapacity: Int,

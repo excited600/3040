@@ -11,9 +11,9 @@ import java.util.UUID
 class GatheringApplicationService(
     private val gatheringService: GatheringService,
 ) {
-    // participant도 ishost true로 생성해야함.
     @Transactional
     fun <R> open(
+        hostUuid: UUID,
         applyType: GatheringEntity.ApplyType,
         minCapacity: Int,
         maxCapacity: Int,
@@ -40,6 +40,7 @@ class GatheringApplicationService(
         mapper: (GatheringEntity) -> R
     ): R {
         val gatheringEntity = gatheringService.open(
+            hostUuid,
             applyType,
             minCapacity,
             maxCapacity,
