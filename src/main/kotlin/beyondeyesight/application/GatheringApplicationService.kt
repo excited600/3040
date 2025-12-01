@@ -1,7 +1,7 @@
 package beyondeyesight.application
 
-import beyondeyesight._0.domain.model.GatheringEntity
-import beyondeyesight._0.domain.service.GatheringService
+import beyondeyesight.domain.model.GatheringEntity
+import beyondeyesight.domain.service.GatheringService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime

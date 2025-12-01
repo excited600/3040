@@ -1,6 +1,6 @@
 package beyondeyesight.domain.repository
 
-import beyondeyesight._0.domain.model.ParticipantEntity
+import beyondeyesight.domain.model.ParticipantEntity
 import java.util.UUID
 
 interface ParticipantRepository {

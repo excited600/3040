@@ -1,7 +1,7 @@
 package beyondeyesight.domain.service
 
-import beyondeyesight._0.domain.model.UserEntity
-import beyondeyesight._0.domain.repository.UserRepository
+import beyondeyesight.domain.model.UserEntity
+import beyondeyesight.domain.repository.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*

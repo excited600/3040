@@ -1,8 +1,8 @@
 package beyondeyesight.domain.service
 
-import beyondeyesight._0.domain.model.GatheringEntity
-import beyondeyesight._0.domain.repository.GatheringRepository
-import beyondeyesight._0.domain.repository.ParticipantRepository
+import beyondeyesight.domain.model.GatheringEntity
+import beyondeyesight.domain.repository.GatheringRepository
+import beyondeyesight.domain.repository.ParticipantRepository
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.time.LocalDateTime

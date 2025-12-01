@@ -1,7 +1,7 @@
 package beyondeyesight.ui
 
-import beyondeyesight._0.application.GatheringApplicationService
-import beyondeyesight._0.domain.model.GatheringEntity
+import beyondeyesight.application.GatheringApplicationService
+import beyondeyesight.domain.model.GatheringEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable

@@ -1,7 +1,7 @@
 package beyondeyesight.domain.service
 
-import beyondeyesight._0.domain.model.ParticipantEntity
-import beyondeyesight._0.domain.repository.ParticipantRepository
+import beyondeyesight.domain.model.ParticipantEntity
+import beyondeyesight.domain.repository.ParticipantRepository
 import org.springframework.stereotype.Service
 import java.util.UUID
 

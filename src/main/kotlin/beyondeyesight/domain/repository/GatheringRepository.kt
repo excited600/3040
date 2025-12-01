@@ -1,6 +1,6 @@
 package beyondeyesight.domain.repository
 
-import beyondeyesight._0.domain.model.GatheringEntity
+import beyondeyesight.domain.model.GatheringEntity
 import java.util.UUID
 
 interface GatheringRepository {

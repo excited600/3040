@@ -1,7 +1,7 @@
 package beyondeyesight.application
 
-import beyondeyesight._0.domain.model.UserEntity
-import beyondeyesight._0.domain.service.UserService
+import beyondeyesight.domain.model.UserEntity
+import beyondeyesight.domain.service.UserService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

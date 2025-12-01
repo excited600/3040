@@ -1,7 +1,7 @@
 package beyondeyesight.infra.repository
 
-import beyondeyesight._0.domain.model.ParticipantEntity
-import beyondeyesight._0.domain.model.ParticipantId
+import beyondeyesight.domain.model.ParticipantEntity
+import beyondeyesight.domain.model.ParticipantId
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 
