@@ -4,10 +4,12 @@ import beyondeyesight.application.GatheringApplicationService
 import beyondeyesight.domain.model.GatheringEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDateTime
 import java.util.UUID
@@ -33,6 +35,17 @@ class GatheringController(
         return ResponseEntity.noContent().build()
     }
 
+    @GetMapping("/page")
+    fun getPage(
+        @RequestParam(required = false) cursor: LocalDateTime?,
+        @RequestParam(defaultValue = "20") size: Int
+    ): ResponseEntity<GetGatheringsResponse> {
+        return gatheringApplicationService.getPage(cursor, size) { gatherings, hasNext, nextCursor ->
+            ResponseEntity.ok(GetGatheringsResponse.from(gatherings, hasNext, nextCursor))
+        }
+    }
+
+
     @PostMapping("/")
     fun open(@RequestBody request: OpenGatheringRequest): ResponseEntity<OpenGatheringResponse> {
         return gatheringApplicationService.open(
@@ -45,20 +58,15 @@ class GatheringController(
             maxAge = request.maxAge,
             maxMaleCount = request.maxMaleCount,
             maxFemaleCount = request.maxFemaleCount,
-            currentMaleCount = request.currentMaleCount,
-            currentFemaleCount = request.currentFemaleCount,
-            totalAttendees = request.totalAttendees,
             fee = request.fee,
             discountEnabled = request.discountEnabled,
             offline = request.offline,
             place = request.place,
             category = request.category,
             subCategory = request.subCategory,
-            status = request.status,
             imageUrl = request.imageUrl,
             title = request.title,
             introduction = request.introduction,
-            clickCount = request.clickCount,
             startDateTime = request.startDateTime,
             mapper = {gatheringEntity -> ResponseEntity.ok(OpenGatheringResponse.from(gatheringEntity))}
         )
@@ -75,20 +83,15 @@ class GatheringController(
         val maxAge: Int,
         val maxMaleCount: Int?,
         val maxFemaleCount: Int?,
-        val currentMaleCount: Int?,
-        val currentFemaleCount: Int?,
-        val totalAttendees: Int,
         val fee: Int,
         val discountEnabled: Boolean,
         val offline: Boolean,
         val place: String,
         val category: GatheringEntity.Category,
-        val subCategory: String,
-        val status: GatheringEntity.Status, // 이거 안받게
+        val subCategory: String, // 수정
         val imageUrl: String,
         val title: String,
         val introduction: String,
-        val clickCount: Int, // 이거 안받게
         val startDateTime: LocalDateTime,
     )
 
@@ -153,5 +156,57 @@ class GatheringController(
     class JoinGatheringRequest(
         val userUuid: UUID
     )
+
+    data class GatheringDto(
+        val uuid: UUID,
+        val title: String,
+        val introduction: String,
+        val category: GatheringEntity.Category,
+        val subCategory: String,
+        val place: String,
+        val fee: Int,
+        val maxCapacity: Int,
+        val totalAttendees: Int,
+        val status: GatheringEntity.Status,
+        val startDateTime: LocalDateTime,
+        val imageUrl: String,
+        val createdAt: LocalDateTime
+    ) {
+        companion object {
+            fun from(entity: GatheringEntity): GatheringDto {
+                return GatheringDto(
+                    uuid = entity.uuid,
+                    title = entity.title,
+                    introduction = entity.introduction,
+                    category = entity.category,
+                    subCategory = entity.subCategory,
+                    place = entity.place,
+                    fee = entity.fee,
+                    maxCapacity = entity.maxCapacity,
+                    totalAttendees = entity.totalAttendees,
+                    status = entity.status,
+                    startDateTime = entity.startDateTime,
+                    imageUrl = entity.imageUrl,
+                    createdAt = entity.createdAt
+                )
+            }
+        }
+    }
+
+    data class GetGatheringsResponse(
+        val gatherings: List<GatheringDto>,
+        val hasNext: Boolean,
+        val nextCursor: LocalDateTime?
+    ) {
+        companion object {
+            fun from(entities: List<GatheringEntity>, hasNext: Boolean, nextCursor: LocalDateTime?): GetGatheringsResponse {
+                return GetGatheringsResponse(
+                    gatherings = entities.map { GatheringDto.from(it) },
+                    hasNext = hasNext,
+                    nextCursor = nextCursor
+                )
+            }
+        }
+    }
 }
 

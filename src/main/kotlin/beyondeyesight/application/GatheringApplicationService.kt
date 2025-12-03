@@ -2,6 +2,7 @@ package beyondeyesight.application
 
 import beyondeyesight.domain.model.GatheringEntity
 import beyondeyesight.domain.service.GatheringService
+import beyondeyesight.domain.service.ParticipantService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -10,6 +11,7 @@ import java.util.UUID
 @Service
 class GatheringApplicationService(
     private val gatheringService: GatheringService,
+    private val participantService: ParticipantService,
 ) {
     @Transactional
     fun <R> open(
@@ -22,20 +24,15 @@ class GatheringApplicationService(
         maxAge: Int,
         maxMaleCount: Int?,
         maxFemaleCount: Int?,
-        currentMaleCount: Int?,
-        currentFemaleCount: Int?,
-        totalAttendees: Int,
         fee: Int,
         discountEnabled: Boolean,
         offline: Boolean,
         place: String,
         category: GatheringEntity.Category,
         subCategory: String,
-        status: GatheringEntity.Status,
         imageUrl: String,
         title: String,
         introduction: String,
-        clickCount: Int,
         startDateTime: LocalDateTime,
         mapper: (GatheringEntity) -> R
     ): R {
@@ -49,21 +46,22 @@ class GatheringApplicationService(
             maxAge,
             maxMaleCount,
             maxFemaleCount,
-            currentMaleCount,
-            currentFemaleCount,
-            totalAttendees,
             fee,
             discountEnabled,
             offline,
             place,
             category,
             subCategory,
-            status,
             imageUrl,
             title,
             introduction,
-            clickCount,
             startDateTime,
+        )
+
+        participantService.join(
+            gatheringUuid = gatheringEntity.uuid,
+            userUuid = hostUuid,
+            isHost = true
         )
 
         return mapper.invoke(gatheringEntity)
@@ -77,5 +75,16 @@ class GatheringApplicationService(
     @Transactional
     fun join(gatheringUuid: UUID, userUuid: UUID) {
         gatheringService.join(gatheringUuid, userUuid)
+    }
+
+    @Transactional(readOnly = true)
+    fun <R> getPage(cursor: LocalDateTime?, size: Int, mapper: (List<GatheringEntity>, Boolean, LocalDateTime?) -> R): R {
+        val gatherings = gatheringService.getPage(cursor, size)
+
+        val hasNext = gatherings.size > size
+        val content = if (hasNext) gatherings.take(size) else gatherings
+        val nextCursor = if (hasNext) content.lastOrNull()?.createdAt else null
+
+        return mapper(content, hasNext, nextCursor)
     }
 }

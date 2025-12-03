@@ -4,7 +4,6 @@ import beyondeyesight.domain.model.UserEntity
 import beyondeyesight.domain.repository.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class UserService(
@@ -33,7 +32,7 @@ class UserService(
             phoneAuthenticated = phoneAuthenticated,
         )
 
-        return userRepository.create(entity)
+        return userRepository.save(entity)
     }
 
 }

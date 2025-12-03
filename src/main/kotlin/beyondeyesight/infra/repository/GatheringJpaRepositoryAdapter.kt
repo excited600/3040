@@ -3,11 +3,13 @@ package beyondeyesight.infra.repository
 import beyondeyesight.domain.model.GatheringEntity
 import beyondeyesight.domain.repository.GatheringRepository
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Repository
 class GatheringJpaRepositoryAdapterI(
     private val gatheringJpaRepository: GatheringJpaRepository,
+    private val gatheringQueryDslRepository: GatheringQueryDslRepository
 ): GatheringRepository {
     override fun create(gatheringEntity: GatheringEntity): GatheringEntity {
         return gatheringJpaRepository.save(gatheringEntity)
@@ -15,6 +17,10 @@ class GatheringJpaRepositoryAdapterI(
 
     override fun findByUuid(uuid: UUID): GatheringEntity? {
         return gatheringJpaRepository.findById(uuid).orElse(null)
+    }
+
+    override fun findPage(cursor: LocalDateTime?, size: Int): List<GatheringEntity> {
+        return gatheringQueryDslRepository.findPage(cursor, size)
     }
 
     override fun delete(gatheringEntity: GatheringEntity) {

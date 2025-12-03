@@ -1,8 +1,11 @@
 package beyondeyesight.domain.service
 
+import beyondeyesight.domain.exception.ResourceNotFoundException
 import beyondeyesight.domain.model.GatheringEntity
+import beyondeyesight.domain.model.UserEntity
 import beyondeyesight.domain.repository.GatheringRepository
 import beyondeyesight.domain.repository.ParticipantRepository
+import beyondeyesight.domain.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.time.LocalDateTime
@@ -14,6 +17,7 @@ class GatheringService(
     private val participantService: ParticipantService,
     private val participantRepository: ParticipantRepository,
     private val lockService: LockService,
+    private val userRepository: UserRepository,
 ) {
 
     fun open(
@@ -26,57 +30,51 @@ class GatheringService(
         maxAge: Int,
         maxMaleCount: Int?,
         maxFemaleCount: Int?,
-        currentMaleCount: Int?,
-        currentFemaleCount: Int?,
-        totalAttendees: Int,
         fee: Int,
         discountEnabled: Boolean,
         offline: Boolean,
         place: String,
         category: GatheringEntity.Category,
         subCategory: String,
-        status: GatheringEntity.Status,
         imageUrl: String,
         title: String,
         introduction: String,
-        clickCount: Int,
         startDateTime: LocalDateTime,
     ): GatheringEntity {
+        val host = userRepository.findByUuid(hostUuid) ?: throw ResourceNotFoundException(
+            resourceName = "User",
+            resourceId = hostUuid
+        )
+
+        val (currentMaleCount, currentFemaleCount) =
+            if (host.gender == UserEntity.Gender.M) {
+               1 to 0
+            } else {
+                0 to 1
+            }
         val entity = GatheringEntity.open(
             applyType = applyType,
-            minCapacity,
-            maxCapacity,
-            genderRatioEnabled,
-            minAge,
-            maxAge,
-            maxMaleCount,
-            maxFemaleCount,
-            currentMaleCount,
-            currentFemaleCount,
-            totalAttendees,
-            fee,
-            discountEnabled,
-            offline,
-            place,
-            category,
-            subCategory,
-            status,
-            imageUrl,
-            title,
-            introduction,
-            clickCount,
-            startDateTime,
+            minCapacity = minCapacity,
+            maxCapacity = maxCapacity,
+            genderRatioEnabled = genderRatioEnabled,
+            minAge = minAge,
+            maxAge = maxAge,
+            maxMaleCount = maxMaleCount,
+            maxFemaleCount = maxFemaleCount,
+            currentMaleCount = currentMaleCount,
+            currentFemaleCount = currentFemaleCount,
+            fee = fee,
+            discountEnabled = discountEnabled,
+            offline = offline,
+            place = place,
+            category = category,
+            subCategory = subCategory,
+            imageUrl = imageUrl,
+            title = title,
+            introduction = introduction,
+            startDateTime = startDateTime,
         )
-
-        val gathering = gatheringRepository.create(entity)
-
-        participantService.join(
-            gatheringUuid = gathering.uuid,
-            userUuid = hostUuid,
-            isHost = true
-        )
-
-        return gathering
+        return gatheringRepository.create(entity)
     }
 
     fun close(uuid: UUID) {
@@ -113,5 +111,9 @@ class GatheringService(
         } finally {
             lockService.unlock("gathering", gatheringUuid.toString(), token)
         }
+    }
+
+    fun getPage(cursor: LocalDateTime?, size: Int): List<GatheringEntity> {
+        return gatheringRepository.findPage(cursor, size)
     }
 }

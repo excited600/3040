@@ -77,20 +77,17 @@ class GatheringEntity(
             maxAge: Int,
             maxMaleCount: Int?,
             maxFemaleCount: Int?,
-            currentMaleCount: Int?,
-            currentFemaleCount: Int?,
-            totalAttendees: Int,
+            currentMaleCount: Int,
+            currentFemaleCount: Int,
             fee: Int,
             discountEnabled: Boolean,
             offline: Boolean,
             place: String,
             category: Category,
             subCategory: String,
-            status: Status,
             imageUrl: String,
             title: String,
             introduction: String,
-            clickCount: Int,
             startDateTime: LocalDateTime,
         ): GatheringEntity {
             return GatheringEntity(
@@ -105,21 +102,24 @@ class GatheringEntity(
                 maxFemaleCount = maxFemaleCount,
                 currentMaleCount = currentMaleCount,
                 currentFemaleCount = currentFemaleCount,
-                totalAttendees = totalAttendees,
+                totalAttendees = INITIAL_TOTAL_ATTENDEES,
                 fee = fee,
                 discountEnabled = discountEnabled,
                 offline = offline,
                 place = place,
                 category = category,
                 subCategory = subCategory,
-                status = status,
+                status = Status.OPEN,
                 imageUrl = imageUrl,
                 title = title,
                 introduction = introduction,
-                clickCount = clickCount,
+                clickCount = INITIAL_CLICK_COUNT,
                 startDateTime = startDateTime
             )
         }
+
+        const val INITIAL_TOTAL_ATTENDEES = 1
+        const val INITIAL_CLICK_COUNT = 0
     }
 
     enum class ApplyType {
